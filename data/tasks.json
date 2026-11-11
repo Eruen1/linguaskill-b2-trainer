@@ -1,0 +1,69 @@
+{
+  "reading": [
+    {
+      "title": "Open Gap-Fill: IT System Migration",
+      "text": "Prior {1} rolling out the new clinical archiving software, our project team conducted a comprehensive risk assessment. Although a few department heads were initially reluctant to adopt the new workflow, the transition resulted {2} a significant reduction in processing times. All external vendors must now comply {3} our updated security standards, {4} were approved by management last month. Provided {5} the final stress tests succeed on Friday, the legacy servers will be phased out next quarter.",
+      "gaps": [
+        { "answer": "to", "explanation": "Fixed preposition: 'prior to' means before." },
+        { "answer": "in", "explanation": "Phrasal verb: 'result in' means to cause an outcome." },
+        { "answer": "with", "explanation": "Fixed collocation: 'comply with' regulations/standards." },
+        { "answer": "which", "explanation": "Non-defining relative clause referring to the standards." },
+        { "answer": "that", "explanation": "Conditional conjunction: 'provided that' means on the condition that." }
+      ]
+    }
+  ],
+  "listening": [
+    {
+      "title": "Part 2: IT Infrastructure Briefing",
+      "transcript": "Good morning everyone. Regarding Saturday's server maintenance: while we initially planned to take the database offline at 8 PM, the clinical shift supervisor asked us to postpone the downtime until 11 PM so emergency reporting isn't disrupted. Also, although license costs increased slightly, our main bottleneck wasn't the budget, but rather a two-week delivery delay from our hardware vendor.",
+      "questions": [
+        {
+          "question": "Why was the start time of the maintenance window changed?",
+          "options": [
+            "Because the hardware vendor delivered the components late.",
+            "To avoid interrupting evening clinical operations.",
+            "Because the IT specialists were unavailable at 8 PM."
+          ],
+          "correctIndex": 1,
+          "explanation": "The speaker states the supervisor asked to postpone it until 11 PM so emergency reporting isn't disrupted."
+        },
+        {
+          "question": "What caused the main delay in the overall project schedule?",
+          "options": [
+            "Unexpectedly high software license fees.",
+            "Internal disagreements over the budget.",
+            "Late shipment of equipment from a supplier."
+          ],
+          "correctIndex": 2,
+          "explanation": "License costs are mentioned as a distractor, but the main bottleneck was a two-week delivery delay from the hardware vendor."
+        }
+      ]
+    }
+  ],
+  "writing": [
+    {
+      "title": "Part 2: Business Report — Software Rollout Evaluation (250+ words)",
+      "minWords": 250,
+      "prompt": "Your company recently introduced a new digital ticketing and archiving system across all departments. The IT Director has asked you to write a report (at least 250 words) evaluating the rollout. Your report should:\n• outline the positive impacts on daily workflow efficiency\n• identify the main technical or training challenges encountered by staff\n• provide two practical recommendations for improving system adoption."
+    },
+    {
+      "title": "Part 1: Internal Email — Hybrid Working Policy (50+ words)",
+      "minWords": 50,
+      "prompt": "Your department head is considering reducing remote working days from two days a week to one day a week to improve team communication. Write an email (at least 50 words) to your manager:\n• weighing the pros and cons of this proposal\n• suggesting a practical compromise."
+    }
+  ],
+  "speaking": [
+    {
+      "title": "Part 1: 60s Presentation — Implementing New Software",
+      "prepSeconds": 20,
+      "speakSeconds": 60,
+      "prompt": "Give a 1-minute presentation about introducing a new software application in a large organization.\n• Why clear communication with end-users is vital\n• Typical problems during a system rollout\n• How to measure whether the rollout was successful"
+    },
+    {
+      "title": "Part 2.1: 40s Meeting Summary (4 Points)",
+      "prepSeconds": 10,
+      "speakSeconds": 40,
+      "prompt": "Summarize these 4 meeting outcomes for a colleague in 40 seconds:\n1. Go-live date moved from 1st March to 15th March.\n2. Mandatory 2-hour training for all key users next week.\n3. Legacy read-only access remains active for 30 days.\n4. Daily 15-minute troubleshooting stand-up at 08:30 AM."
+    }
+  ]
+}

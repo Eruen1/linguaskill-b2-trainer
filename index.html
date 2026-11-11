@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Linguaskill Business B2 Trainer</title>
+  <link rel="manifest" href="manifest.json" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen pb-24 select-none">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-30 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">B2</span>
+      <div>
+        <h1 class="text-sm font-bold leading-tight">Linguaskill Business</h1>
+        <p class="text-[11px] text-slate-400" id="headerStats">0 / 0 Cards Mastered</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <button onclick="openModal('changelogModal')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1.5 rounded-lg border border-slate-700">
+        v4.1
+      </button>
+      <button onclick="openModal('deckModal')" class="text-xs bg-slate-800 hover:bg-slate-700 text-blue-400 font-medium px-2.5 py-1.5 rounded-lg border border-slate-700">
+        + Decks
+      </button>
+      <button id="apiKeyStatusBtn" onclick="openModal('apiModal')" class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-1.5 rounded-lg font-medium">
+        ⚙️ API Key
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-2xl mx-auto p-4 space-y-4">
+
+    <!-- TAB 1: CARDS -->
+    <section id="tab-cards" class="tab-view space-y-4">
+      <div class="flex flex-wrap gap-2 items-center justify-between bg-slate-900 p-3 rounded-xl border border-slate-800">
+        <select id="categoryFilter" onchange="filterCards()" class="bg-slate-800 text-xs rounded-lg px-2.5 py-2 border border-slate-700 text-slate-200">
+          <option value="all">All Categories</option>
+        </select>
+        <select id="statusFilter" onchange="filterCards()" class="bg-slate-800 text-xs rounded-lg px-2.5 py-2 border border-slate-700 text-slate-200">
+          <option value="all">All Status</option>
+          <option value="learning">Learning / New</option>
+          <option value="known">Known ✓</option>
+        </select>
+        <button onclick="toggleCardDirection()" id="dirBtn" class="text-xs bg-slate-800 px-2.5 py-2 rounded-lg border border-slate-700 text-slate-300">
+          Term → Def
+        </button>
+        <button onclick="shuffleCards()" class="text-xs bg-slate-800 px-2.5 py-2 rounded-lg border border-slate-700 text-slate-300">
+          🔀 Shuffle
+        </button>
+      </div>
+
+      <!-- 3D FLASHCARD -->
+      <div class="perspective-1000 h-64 w-full cursor-pointer" onclick="flipCard()">
+        <div id="flashcardInner" class="card-inner relative w-full h-full rounded-2xl border border-slate-800 bg-slate-900 p-6 flex flex-col justify-between shadow-xl">
+          <!-- FRONT -->
+          <div class="card-front flex flex-col justify-between h-full">
+            <div class="flex justify-between items-center text-xs text-slate-400">
+              <span id="cardCategoryBadge" class="bg-slate-800 px-2 py-0.5 rounded">Set 1</span>
+              <span id="cardCounter">1 / 10</span>
+            </div>
+            <div class="my-auto text-center">
+              <h2 id="cardFrontText" class="text-xl font-bold text-white">Loading...</h2>
+              <p class="text-xs text-slate-500 mt-3">Tap card to flip</p>
+            </div>
+            <div class="flex justify-end">
+              <button onclick="speakCurrentCard(event)" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg">🔊 Speak</button>
+            </div>
+          </div>
+          <!-- BACK -->
+          <div class="card-back flex flex-col justify-between h-full">
+            <div class="text-xs text-blue-400 font-semibold">B2 English Definition & Context</div>
+            <div class="my-auto space-y-3 overflow-y-auto">
+              <p id="cardBackDef" class="text-base font-medium text-slate-100"></p>
+              <p id="cardBackEx" class="text-xs italic text-slate-400 bg-slate-950/70 p-3 rounded-lg border border-slate-800"></p>
+            </div>
+            <div class="text-right text-[11px] text-slate-500">Tap to flip back</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD CONTROLS -->
+      <div class="grid grid-cols-3 gap-2">
+        <button onclick="markCard('learning')" class="bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 py-3 rounded-xl text-xs font-bold">
+          ↺ Repeat Later
+        </button>
+        <button onclick="nextCard()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-3 rounded-xl text-xs font-bold">
+          Skip →
+        </button>
+        <button onclick="markCard('known')" class="bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 py-3 rounded-xl text-xs font-bold">
+          ✓ Known (B2)
+        </button>
+      </div>
+    </section>
+
+    <!-- TAB 2: READING -->
+    <section id="tab-reading" class="tab-view hidden space-y-4">
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold text-blue-400">Reading — Open Gap-Fill & Collocations</h2>
+          <button onclick="generateAiTask('reading')" id="btnGenReading" class="text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold px-3 py-1.5 rounded-lg">
+            🎲 Generate AI Task
+          </button>
+        </div>
+        <select id="readingTaskSelect" onchange="renderReadingTask()" class="w-full bg-slate-800 text-xs rounded-lg p-2.5 border border-slate-700"></select>
+        <div id="readingContent" class="text-sm leading-relaxed text-slate-200 bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3"></div>
+        <button onclick="checkReadingAnswers()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs">
+          Check Answers
+        </button>
+        <div id="readingFeedback" class="hidden text-xs p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1"></div>
+      </div>
+    </section>
+
+    <!-- TAB 3: LISTENING -->
+    <section id="tab-listening" class="tab-view hidden space-y-4">
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold text-blue-400">Listening — Business Audio Simulation</h2>
+          <button onclick="generateAiTask('listening')" id="btnGenListening" class="text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold px-3 py-1.5 rounded-lg">
+            🎲 Generate AI Audio Task
+          </button>
+        </div>
+        <select id="listeningTaskSelect" onchange="renderListeningTask()" class="w-full bg-slate-800 text-xs rounded-lg p-2.5 border border-slate-700"></select>
+        
+        <div class="flex items-center justify-between bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <button onclick="playListeningAudio()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-lg">
+            ▶ Play Audio (Max 2x)
+          </button>
+          <span id="listenPlaysLeft" class="text-xs text-slate-400">Plays remaining: 2 / 2</span>
+        </div>
+
+        <div id="listeningQuestions" class="space-y-3 text-sm"></div>
+
+        <div class="flex gap-2">
+          <button onclick="checkListeningAnswers()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs">
+            Check Answers
+          </button>
+          <button onclick="toggleTranscript()" class="bg-slate-800 text-slate-300 px-3 py-2.5 rounded-xl text-xs">
+            Show Transcript
+          </button>
+        </div>
+        <div id="listeningTranscript" class="hidden text-xs italic text-slate-400 bg-slate-950 p-3 rounded-lg border border-slate-800"></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: WRITING -->
+    <section id="tab-writing" class="tab-view hidden space-y-4">
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold text-blue-400">Writing Simulator (Email & Report)</h2>
+          <button onclick="generateAiTask('writing')" id="btnGenWriting" class="text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold px-3 py-1.5 rounded-lg">
+            🎲 Generate AI Prompt
+          </button>
+        </div>
+        <select id="writingTaskSelect" onchange="renderWritingTask()" class="w-full bg-slate-800 text-xs rounded-lg p-2.5 border border-slate-700"></select>
+        <div id="writingPromptBox" class="text-xs bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-slate-300 leading-relaxed"></div>
+
+        <div class="flex items-center justify-between text-xs bg-slate-950 px-3 py-2 rounded-lg border border-slate-800">
+          <span id="wordCountDisplay" class="font-bold text-amber-400">Words: 0 / Target: 250</span>
+          <div class="flex items-center gap-2">
+            <span id="writingTimerDisplay" class="font-mono text-slate-200">55:00</span>
+            <button onclick="toggleWritingTimer()" class="bg-slate-800 px-2 py-1 rounded text-[11px]">Start/Pause</button>
+          </div>
+        </div>
+
+        <textarea id="writingInput" oninput="updateWordCount()" rows="9" placeholder="Write your B2 Email or Business Report here..." class="w-full bg-slate-950 text-slate-100 text-sm p-3.5 rounded-xl border border-slate-800 focus:outline-none focus:border-blue-500 select-text"></textarea>
+
+        <button onclick="gradeWritingWithAi()" id="btnGradeWriting" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs">
+          ✨ AI Instant B2 Grading & Feedback
+        </button>
+        <div id="writingFeedbackBox" class="hidden text-xs bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 whitespace-pre-wrap"></div>
+      </div>
+    </section>
+
+    <!-- TAB 5: SPEAKING -->
+    <section id="tab-speaking" class="tab-view hidden space-y-4">
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold text-blue-400">Speaking — Headset Exam Timer</h2>
+          <button onclick="generateAiTask('speaking')" id="btnGenSpeaking" class="text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold px-3 py-1.5 rounded-lg">
+            🎲 Generate AI Scenario
+          </button>
+        </div>
+        <select id="speakingTaskSelect" onchange="renderSpeakingTask()" class="w-full bg-slate-800 text-xs rounded-lg p-2.5 border border-slate-700"></select>
+        <div id="speakingPromptBox" class="text-xs bg-slate-950 p-4 rounded-xl border border-slate-800 text-slate-200 leading-relaxed"></div>
+
+        <!-- TIMER & CONTROLS -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center space-y-3">
+          <div id="speakingPhaseBadge" class="text-xs font-bold uppercase tracking-wider text-amber-400">Ready to Start</div>
+          <div id="speakingTimerBig" class="text-4xl font-mono font-bold text-white">00:00</div>
+          <div class="flex flex-wrap gap-2 justify-center">
+            <button onclick="startSpeakingFlow()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl">
+              ▶ Start Prep & Speak
+            </button>
+            <button onclick="skipSpeakingPrep()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3 py-2.5 rounded-xl">
+              ⏭ Skip Prep
+            </button>
+            <button onclick="submitSpeakingEarly()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl">
+              ✓ Submit Early & Next →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="fixed bottom-0 left-0 right-0 z-30 bg-slate-900/95 backdrop-blur border-t border-slate-800">
+    <div class="max-w-2xl mx-auto grid grid-cols-5 text-center">
+      <button onclick="switchTab('cards')" id="nav-cards" class="nav-btn py-3 text-blue-400 font-bold text-xs flex flex-col items-center gap-1">
+        <span>🗂️</span><span>Cards</span>
+      </button>
+      <button onclick="switchTab('reading')" id="nav-reading" class="nav-btn py-3 text-slate-400 text-xs flex flex-col items-center gap-1">
+        <span>📖</span><span>Reading</span>
+      </button>
+      <button onclick="switchTab('listening')" id="nav-listening" class="nav-btn py-3 text-slate-400 text-xs flex flex-col items-center gap-1">
+        <span>🎧</span><span>Listening</span>
+      </button>
+      <button onclick="switchTab('writing')" id="nav-writing" class="nav-btn py-3 text-slate-400 text-xs flex flex-col items-center gap-1">
+        <span>✍️</span><span>Writing</span>
+      </button>
+      <button onclick="switchTab('speaking')" id="nav-speaking" class="nav-btn py-3 text-slate-400 text-xs flex flex-col items-center gap-1">
+        <span>🎙️</span><span>Speaking</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MODAL 1: API KEY SETTINGS -->
+  <div id="apiModal" class="fixed inset-0 z-50 hidden bg-black/80 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4">
+      <div class="flex justify-between items-center">
+        <h3 class="font-bold text-sm text-white">⚙️ Gemini API Key Setup (Local Only)</h3>
+        <button onclick="closeModal('apiModal')" class="text-slate-400 text-lg">✕</button>
+      </div>
+      <p class="text-xs text-slate-400 leading-relaxed">
+        Paste your free Google AI Studio key (<code class="text-blue-400">AIzaSy...</code>) below. It is saved <strong>exclusively in your browser's localStorage</strong> and is never uploaded to GitHub.
+      </p>
+      <input id="apiKeyInput" type="password" placeholder="AIzaSy..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white select-text" />
+      <div class="flex gap-2">
+        <button onclick="saveUserApiKey()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-xs">Save Key Locally</button>
+        <button onclick="clearUserApiKey()" class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-3 py-2.5 rounded-xl text-xs">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: DECK IMPORT & BACKUP -->
+  <div id="deckModal" class="fixed inset-0 z-50 hidden bg-black/80 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-5 space-y-4">
+      <div class="flex justify-between items-center">
+        <h3 class="font-bold text-sm text-white">+ Bulk Import Flashcards & Backup</h3>
+        <button onclick="closeModal('deckModal')" class="text-slate-400 text-lg">✕</button>
+      </div>
+      <input id="importCategoryName" type="text" placeholder="Category Name (e.g. Set 2: Phrasal Verbs)" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white select-text" />
+      <textarea id="bulkImportText" rows="5" placeholder="term | definition [Example: ...]" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white select-text"></textarea>
+      <button onclick="importBulkCards()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-xs">Import Cards</button>
+      <hr class="border-slate-800" />
+      <div class="flex gap-2">
+        <button onclick="exportBackupJson()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 py-2 rounded-xl text-xs">⬇ Export JSON Backup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: CHANGELOG -->
+  <div id="changelogModal" class="fixed inset-0 z-50 hidden bg-black/80 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-3">
+      <div class="flex justify-between items-center">
+        <h3 class="font-bold text-sm text-white">📋 App Changelog</h3>
+        <button onclick="closeModal('changelogModal')" class="text-slate-400 text-lg">✕</button>
+      </div>
+      <div class="text-xs text-slate-300 space-y-2 max-h-64 overflow-y-auto">
+        <p><strong>v4.1.0:</strong> Added tailored AI thinking budgets per skill & live progress banner with timer.</p>
+        <p><strong>v4.0 (Modular VS Code & GitHub Edition):</strong> Separated architecture into HTML, CSS, JS modules, JSON data files, PWA Service Worker, and secure local API Key UI.</p>
+        <p><strong>v3.0:</strong> Added live Gemini AI Task Generator & Instant B2 Writing Grader.</p>
+        <p><strong>v2.0:</strong> Added all 4 official Linguaskill modules + Early Submit in Speaking.</p>
+        <p><strong>v1.0:</strong> Initial Flashcard & Timer prototype.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

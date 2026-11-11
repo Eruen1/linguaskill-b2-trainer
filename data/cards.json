@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "category": "Set 1: Core Collocations",
+    "term": "to comply with regulations",
+    "definition": "to follow official rules or laws",
+    "example": "All clinical and IT departments must strictly comply with data protection regulations.",
+    "status": "learning"
+  },
+  {
+    "id": 2,
+    "category": "Set 1: Core Collocations",
+    "term": "to streamline processes",
+    "definition": "to make workflows simpler, faster, and more efficient",
+    "example": "Automating routine checks will help us streamline internal processes.",
+    "status": "learning"
+  },
+  {
+    "id": 3,
+    "category": "Set 1: Core Collocations",
+    "term": "to mitigate risks",
+    "definition": "to make potential dangers or problems less severe",
+    "example": "Redundant servers are essential to mitigate the risk of unplanned downtime.",
+    "status": "learning"
+  },
+  {
+    "id": 4,
+    "category": "Set 1: Core Collocations",
+    "term": "a bottleneck",
+    "definition": "a point of delay in a process that slows down the entire system",
+    "example": "The manual approval step has become a major bottleneck in our workflow.",
+    "status": "learning"
+  },
+  {
+    "id": 5,
+    "category": "Set 1: Core Collocations",
+    "term": "prior to",
+    "definition": "before a particular time or event (formal)",
+    "example": "All key users must complete the training prior to the system go-live.",
+    "status": "learning"
+  }
+]
