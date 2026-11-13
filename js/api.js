@@ -44,7 +44,8 @@ async function callGeminiJson(systemPrompt, userPrompt, options = {}) {
     throw new Error(`API Error (${response.status}): ${errText}`);
   }
 
-  const data = await response.json();
+const data = await response.json();
   const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-  return JSON.parse(rawText);
+  const cleanJson = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
+  return JSON.parse(cleanJson);
 }
